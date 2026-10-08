@@ -15,15 +15,17 @@ export interface Employee {
 
 export interface Route {
   id: string;
+  number: number;
   name: string;
-  day: string;
+  /** 1 = Monday ... 5 = Friday */
+  weekday: number;
   /** Customer ids in driving order. */
   stops: string[];
 }
 
 export interface Customer {
   id: string;
-  number: string; // C-00001
+  number: string; // C-00001, system generated, never editable
   firstName: string;
   lastName: string;
   phone: string;
@@ -37,25 +39,32 @@ export interface Customer {
   gateCode: string;
   callFirst: boolean;
   active: boolean;
-  /** Prepaid credit; auto-debited when a service is recorded. */
+  /** Prepaid credit; debited automatically as services are recorded. */
   prepayBalance: number;
+  /** Type of work, one of SERVICE_TYPES. */
   serviceType: string;
   notes: string;
+  createdAt: string;
 }
 
-export type WorkOrderStatus = 'Completed' | 'In progress' | 'Upcoming';
+export type WorkOrderStatus = 'Completed' | 'In progress' | 'Scheduled' | 'Missed';
 
 export interface WorkOrder {
   id: string;
   number: string; // WO-10001
   customerId: string;
-  date: string; // YYYY-MM-DD
+  date: string; // scheduled date, YYYY-MM-DD
+  completedDate?: string;
   service: string;
+  /** Fertilization application type, when service is the fertilization program. */
+  application?: string;
   employeeId: string;
+  manHours: number;
   price: number;
   status: WorkOrderStatus;
   chemical: string;
   epaReg: string;
+  notes: string;
   lastPrinted?: string; // ISO timestamp
 }
 
@@ -63,14 +72,16 @@ export interface Invoice {
   id: string;
   number: string; // INV-20001
   customerId: string;
-  workOrderId: string;
+  workOrderId?: string;
   date: string;
+  description: string;
   amount: number;
   amountPaid: number;
+  lateFee: number;
 }
 
-export type PaymentKind = 'Payment' | 'Prepayment' | 'Prepay Debit' | 'Reversal' | 'Service Credit' | 'Refund';
-export type PaymentMethod = 'Check' | 'Card' | 'Cash' | 'ACH' | 'Prepaid' | 'Credit';
+export type PaymentKind = 'Payment' | 'Prepayment' | 'Prepay debit' | 'Reversal' | 'Service credit' | 'Refund';
+export type PaymentMethod = 'Check' | 'Credit card' | 'Cash' | 'ACH' | 'Prepaid balance' | 'Credit';
 
 export interface Payment {
   id: string;
@@ -79,30 +90,51 @@ export interface Payment {
   date: string;
   kind: PaymentKind;
   method: PaymentMethod;
-  /** Check number or card type. */
+  /** Check number or card type. Card numbers are never stored. */
   reference: string;
   amount: number;
   reversed: boolean;
   note: string;
 }
 
+export interface AuditEntry {
+  id: string;
+  ts: string; // ISO timestamp
+  action: string;
+  customerId?: string;
+  amount?: number;
+  detail: string;
+}
+
 export interface PricingDefaults {
   laborRate: number;
+  bedInstallPerLinearFt: number;
+  bedMaterialCost: number;
   mulchPerYard: number;
   stonePerTon: number;
   weedBarrierPerSqFt: number;
+  prepayDiscountPct: number;
+}
+
+export interface Settings {
+  routePrefix: string;
+  optimizeWithMaps: boolean;
+  pricing: PricingDefaults;
+  /** Late fee in dollars at 30 / 60 / 90 days past due. */
+  lateFees: { d30: number; d60: number; d90: number };
 }
 
 export interface AppData {
   version: number;
+  /** Monday of the week the data is anchored to; data shifts forward by whole weeks on load. */
+  anchorMonday: string;
   employees: Employee[];
   routes: Route[];
   customers: Customer[];
   workOrders: WorkOrder[];
   invoices: Invoice[];
   payments: Payment[];
-  pricing: PricingDefaults;
-  nextCustomerSeq: number;
-  nextWorkOrderSeq: number;
-  nextInvoiceSeq: number;
+  audit: AuditEntry[];
+  settings: Settings;
+  lastBackup?: string;
 }

@@ -1,19 +1,21 @@
 # Billy Goat Lawn Care — Field Service & Billing Demo
 
-A clickable UI prototype of a field-service and billing system for **Billy Goat Lawn Care LLC**, built for a capstone project.
+A clickable UI prototype of a field-service and billing system for **Billy Goat Lawn Care LLC**, built for a capstone project to replace the company's old Windows 95 program.
 
 **Live demo:** https://gdelong33.github.io/LawnCare-Test-GUI/ <!-- replace if the repo/user name changes -->
 
-> This is a front-end prototype only. There is no backend. All customers, work orders, and payments are invented sample data from `src/data/seed.ts`. Any edits you make are saved in your browser's localStorage, so they stick around between visits. Use **Reset demo data** at the bottom of the sidebar to start over.
+> This is a front-end prototype only. There is no backend. All customers, work orders, and payments are invented sample data from `src/data/seed.ts`. Any edits you make are saved in your browser's localStorage, so they stick around between visits. Use **Data → Reset demo data** to start over.
 
 ## Screens
 
-- **Dashboard**: stats, today's route, recent payments
-- **Customers**: searchable list plus an editable profile, prepayments, and application history
-- **Work Orders**: printable work order sheet, with reprint and print-all-for-route
-- **Routes**: drag-and-drop stop ordering and square-footage totals
-- **Pricing / Proposal**: live job price calculator
-- **Reports & Payments**: production, payments, open invoices, and coverage reports, with payment reversal, service credit, and refunds
+- **Home (start menu)**: customer lookup, prepayment letters (print or email), report shortcuts, this week by route, revenue and past-due tiles, fertilization round progress
+- **Customers**: searchable list and an editable profile with prepaid balance and application history
+- **Schedule / Routes**: drag-and-drop stop order, renameable routes, sq ft totals for chemical ordering
+- **Work orders**: printable work order sheets, with reprint and print-all-for-route
+- **Pricing**: proposal calculator with overridable defaults
+- **Payments**: record, reverse, credit and refund payments, with an audit log and open invoices
+- **Reports**: production, payment, open invoice, fertilization and sq ft coverage reports
+- **Data**: JSON backup and restore, plus a CSV importer for migrating from the old system
 
 ## Run locally
 
