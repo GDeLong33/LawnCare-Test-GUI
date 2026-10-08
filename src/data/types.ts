@@ -66,6 +66,8 @@ export interface WorkOrder {
   epaReg: string;
   notes: string;
   lastPrinted?: string; // ISO timestamp
+  /** Late-fee option printed on the sheet: 0 = none, or 30 / 60 / 90 days past due. */
+  lateFeeTier?: 0 | 30 | 60 | 90;
 }
 
 export interface Invoice {

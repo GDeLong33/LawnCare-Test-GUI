@@ -85,7 +85,7 @@ function applyToInvoices(d: AppData, customerId: string, amount: number): number
   return left;
 }
 
-function nextCustomerNumber(d: AppData): string {
+export function nextCustomerNumber(d: AppData): string {
   const max = d.customers.reduce((m, c) => Math.max(m, Number(c.number.replace(/\D/g, '')) || 0), 0);
   return `C-${String(max + 1).padStart(5, '0')}`;
 }
@@ -273,7 +273,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           const c = d.customers.find((x) => x.id === p.customerId);
           const inv = p.invoiceId ? d.invoices.find((i) => i.id === p.invoiceId) : undefined;
           if (inv) inv.amountPaid = round2(Math.max(0, inv.amountPaid - p.amount));
-          else if (c && p.kind === 'Payment') {
+          else if (c && (p.kind === 'Payment' || p.kind === 'Service credit')) {
             // Unlinked payment was spread over invoices: pull it back off the newest ones first.
             let left = p.amount;
             const paid = d.invoices
